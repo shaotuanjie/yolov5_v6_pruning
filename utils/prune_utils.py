@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 def get_sr_flag(epoch, sr):
     # return epoch >= 5 and sr
@@ -12,10 +13,18 @@ class BNOptimizer():
             # s = s if epoch <= opt.epochs * 0.5 else s * 0.01
             for idx in prune_idx:
                 # Squential(Conv, BN, Lrelu)
+                conv_layer = module_list[idx][0]
+                conv_layer_weight = conv_layer.weight.data.cpu().numpy()
+                abs_sum = np.sum(np.abs(conv_layer_weight.reshape(conv_layer_weight.shape[0],-1)),axis=-1)
+                small, large = min(abs_sum), max(abs_sum)
+                abs_sum = (abs_sum - small) / (large-small)
+                abs_sum = abs_sum + 0.25
+                reweight = torch.from_numpy(abs_sum).cuda()
                 # bn_module = module_list[idx][1]
                 bn_module = module_list[idx][1] if type(
                     module_list[idx][1]).__name__ == 'BatchNorm2d' else module_list[idx][0]
-                bn_module.weight.grad.data.add_(s * torch.sign(bn_module.weight.data))  # L1
+                #bn_module.weight.grad.data.add_(s * torch.sign(bn_module.weight.data))  # L1
+                bn_module.weight.grad.data.add_(s * (1/reweight) * torch.sign(bn_module.weight.data))  # L1
             if idx2mask:
                 for idx in idx2mask:
                     # bn_module = module_list[idx][1]

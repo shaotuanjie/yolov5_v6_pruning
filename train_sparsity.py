@@ -348,7 +348,8 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
                     loss *= 4.
 
             # Backward
-            scaler.scale(loss).backward()
+            #scaler.scale(loss).backward()
+            loss.backward()
 
             idx2mask = None
             # if opt.sr and opt.prune==1 and epoch > opt.epochs * 0.5:
@@ -358,8 +359,9 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
 
             # Optimize
             if ni - last_opt_step >= accumulate:
-                scaler.step(optimizer)  # optimizer.step
-                scaler.update()
+                #scaler.step(optimizer)  # optimizer.step
+                #scaler.update()
+                optimizer.step()
                 optimizer.zero_grad()
                 if ema:
                     ema.update(model)

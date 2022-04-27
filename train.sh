@@ -1,1 +1,1 @@
-python train.py --data VisDrone.yaml --cfg yolov5l.yaml --weights '' --batch-size 24
+python train.py --data VisDrone.yaml --cfg yolov5s.yaml --weights '' --batch-size 24
