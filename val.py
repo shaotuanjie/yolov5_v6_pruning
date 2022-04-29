@@ -171,7 +171,7 @@ def run(data,
         dt[0] += t2 - t1
 
         # Run model
-        print("imges.size is ", img.size())
+        #print("imges.size is ", img.size())
         out, train_out = model(img, augment=augment)  # inference and training outputs
         dt[1] += time_sync() - t2
 
