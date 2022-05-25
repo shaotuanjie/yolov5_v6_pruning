@@ -1,1 +1,1 @@
-python train_sparsity.py --img 640 --batch 64  --data data/VisDrone.yaml --cfg models/yolov5s.yaml --weights yolov5s.pt  --name "your work name"  -sr --s 0.001 --prune 1
+python train_sparsity.py --img 640 --batch 64  --data data/VisDrone.yaml --model-cfg cfg/yolov5s_v6.cfg --cfg models/yolov5s.yaml --weights yolov5s.pt  --name "your work name"  -sr --s 0.001 --prune 1
